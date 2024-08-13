@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+  login-service:
+    build:
+      context: ./login-service
+      dockerfile: Dockerfile
+    container_name: login-service
+    ports:
+      - 8000:8000
+    volumes:
+      - ./login-service/:/var/www
+    depends_on:
+      - login-db
+      - rabbitmq
+
+  login-db:
+    image: mysql:8.0
+    container_name: login-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: login_db
+      MYSQL_USER: login
+      MYSQL_PASSWORD: secret
+    ports:
+      - 33060:3306
+    volumes:
+      - login_db_data:/var/lib/mysql
+
+  log-service:
+    build:
+      context: ./log-service
+      dockerfile: Dockerfile
+    container_name: log-service
+    ports:
+      - 8001:8000
+    volumes:
+      - ./log-service/:/var/www
+    depends_on:
+      - log-db
+      - rabbitmq
+
+  log-db:
+    image: mysql:8.0
+    container_name: log-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: log_db
+      MYSQL_USER: log
+      MYSQL_PASSWORD: secret
+    ports:
+      - 33061:3306
+    volumes:
+      - log_db_data:/var/lib/mysql
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+volumes:
+  login_db_data:
+  log_db_data:
