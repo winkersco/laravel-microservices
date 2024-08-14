@@ -6,8 +6,8 @@ use App\Models\User;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function findByEmail(string $email): ?User
+    public function findByMobile(string $mobile): ?User
     {
-        return User::where('email', $email)->first();
+        return User::where('mobile', $mobile)->first();
     }
 }
