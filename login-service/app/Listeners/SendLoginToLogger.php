@@ -21,12 +21,15 @@ class SendLoginToLogger
     {
         // Prepare the data to send to the logger service
         $data = [
-            'key' => 'login',
-            'data' => $event->user->mobile,
-            'datetime' => $event->loginAt,
+            'service_name' => 'login',
+            'type' => 'login',
+            'identifier' => $event->user->mobile,
+            'context' => [
+                'datetime' => $event->loginAt,
+            ],
         ];
 
         // Send the data to the RabbitMQ queue
-        $this->rabbitMQService->publishToQueue('login_logs', $data);
+        $this->rabbitMQService->publishToQueue('logs', $data);
     }
 }
