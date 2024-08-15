@@ -9,6 +9,9 @@ services:
       - 8000:8000
     volumes:
       - ./login-service/:/var/www
+    networks:
+      - login
+      - microservices
     depends_on:
       - login-db
       - rabbitmq
@@ -21,8 +24,8 @@ services:
       MYSQL_DATABASE: login_db
       MYSQL_USER: login
       MYSQL_PASSWORD: secret
-    ports:
-      - 33060:3306
+    networks:
+      - login
     volumes:
       - login_db_data:/var/lib/mysql
 
@@ -31,10 +34,11 @@ services:
       context: ./log-service
       dockerfile: Dockerfile
     container_name: log-service
-    ports:
-      - 8001:8000
     volumes:
       - ./log-service/:/var/www
+    networks:
+      - log
+      - microservices
     depends_on:
       - log-db
       - rabbitmq
@@ -47,10 +51,10 @@ services:
       MYSQL_DATABASE: log_db
       MYSQL_USER: log
       MYSQL_PASSWORD: secret
-    ports:
-      - 33061:3306
     volumes:
       - log_db_data:/var/lib/mysql
+    networks:
+      - log
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -61,6 +65,16 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - microservices
+
+networks:
+  microservices:
+    driver: bridge
+  login:
+    driver: bridge
+  log:
+    driver: bridge
 
 volumes:
   login_db_data:
