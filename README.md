@@ -82,7 +82,7 @@ These services are built with Laravel and Docker, with RabbitMQ facilitating com
 
     ```bash
     git clone https://github.com/winkersco/laravel-microservices
-    cd https://github.com/winkersco/laravel-microservices
+    cd laravel-microservices
     ```
 
 2. **Build and Start the Services**:
