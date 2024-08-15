@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'log-service' => [
+        'host' => 'log-service',
+        'port' => '8000',
+    ]
+
 ];
